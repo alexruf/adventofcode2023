@@ -1,0 +1,78 @@
+package main
+
+import (
+	"fmt"
+	"io"
+	"os"
+	"strconv"
+	"strings"
+)
+
+const chars string = "123456789"
+
+func main() {
+	f, _ := os.Open("./input")
+	defer f.Close()
+	buff, _ := io.ReadAll(f)
+	rows := strings.SplitAfter(string(buff), "\n")
+	total := 0
+	for i, row := range rows {
+		v := parseValue(row)
+		fmt.Printf("Row(%d): %q Value: %d\n", i+1, strings.ReplaceAll(row, "\n", ""), v)
+		total += v
+	}
+
+	fmt.Printf("Total calibration value is:  %d\n", total)
+}
+
+func parseValue(input string) int {
+	if len(strings.TrimSpace(input)) == 0 {
+		return 0
+	}
+	iFirst := strings.IndexAny(input, chars)
+	iLast := strings.LastIndexAny(input, chars)
+
+	first := ""
+	last := ""
+	if iFirst > -1 {
+		first = input[iFirst : iFirst+1]
+	}
+	if iLast > -1 {
+		last = input[iLast : iLast+1]
+	}
+
+	spelled := map[string]string{
+		"one":   "1",
+		"two":   "2",
+		"three": "3",
+		"four":  "4",
+		"five":  "5",
+		"six":   "6",
+		"seven": "7",
+		"eight": "8",
+		"nine":  "9",
+	}
+
+	for k, v := range spelled {
+		if i := strings.Index(input, k); i >= 0 && i < iFirst {
+			first = v
+			iFirst = i
+			if last == "" {
+				last = v
+				iLast = i
+			}
+		}
+		if i := strings.LastIndex(input, k); i >= 0 && i > iLast {
+			last = v
+			iLast = i
+			if first == "" {
+				first = v
+				iFirst = i
+			}
+		}
+	}
+
+	num, _ := strconv.Atoi(fmt.Sprintf("%s%s", first, last))
+
+	return num
+}
