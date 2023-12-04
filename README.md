@@ -16,3 +16,7 @@ My solutions for the [Advent of Code 2023](https://adventofcode.com/2023/) puzzl
 
 - Part One: [Code (Golang)](./d03/p1/)
 
+## [Day 4: Scratchcards](https://adventofcode.com/2023/day/4)
+
+- Part One: [Code (Golang)](./d04/p1/)
+
